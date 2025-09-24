@@ -2,32 +2,24 @@
 header("Content-Type: application/json");
 require_once "db.php";
 
-// Validate movie_id
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     echo json_encode(["error" => "Invalid movie ID"]);
     exit;
 }
 
-$movie_id = intval($_GET['id']);
+$movie_id = (int)$_GET['id'];
 
-// Fetch movie details from DB
-$stmt = $conn->prepare("SELECT * FROM movies WHERE id = ?");
-$stmt->bind_param("i", $movie_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$movie = $result->fetch_assoc();
+$stmt = $pdo->prepare("SELECT id, title, genre, description, poster_url, release_year FROM movies WHERE id = ?");
+$stmt->execute([$movie_id]);
+$movie = $stmt->fetch();
 
-if ($movie) {
-    echo json_encode([
-        "id" => $movie["id"],
-        "title" => $movie["title"],
-        "year" => $movie["year"],
-        "genre" => $movie["genre"],
-        "description" => $movie["description"],
-        "poster_url" => $movie["poster_url"],
-        "rating" => $movie["rating"]
-    ]);
-} else {
+if (!$movie) {
     echo json_encode(["error" => "Movie not found"]);
+    exit;
 }
-?>
+
+$r = $pdo->prepare("SELECT IFNULL(ROUND(AVG(rating),1),0) AS avg_rating, COUNT(*) AS rating_count FROM ratings WHERE movie_id = ?");
+$r->execute([$movie_id]);
+$rating = $r->fetch() ?: ["avg_rating"=>0, "rating_count"=>0];
+
+echo json_encode(array_merge($movie, $rating));

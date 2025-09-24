@@ -40,7 +40,7 @@ if (isset($_SESSION['user_id'])) {
       </div>
 
       <div class="login-right">
-        <img src="assets/login-banner.jpg" alt="Movie Haven" class="login-image">
+        <img src="assests/placeholder.jpg" alt="Movie Haven" class="login-image">
       </div>
     </div>
   </div>

@@ -28,7 +28,7 @@ if (!$movie) {
 
     <!-- Navbar -->
     <header class="navbar">
-        <div class="logo">🎬 CineSphere</div>
+        <div class="logo">Flimysite</div>
         <nav>
             <a href="index.php">Home</a>
             <a href="index.php#genres">Genres</a>

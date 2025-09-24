@@ -45,7 +45,7 @@ if (isset($_SESSION['user_id'])) {
 
       <!-- Right section (Image) -->
       <div class="signup-right">
-        <img src="assets/signup-banner.jpg" alt="Signup Banner" class="signup-image">
+        <img src="assests/placeholder.jpg" alt="Signup Banner" class="signup-image">
       </div>
     </div>
   </div>

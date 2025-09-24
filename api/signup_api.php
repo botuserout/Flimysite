@@ -1,39 +1,44 @@
 <?php
 session_start();
-require 'db.php';
+require_once 'db.php';
 
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
-
-    if (empty($username) || empty($password)) {
-        echo json_encode(["success" => false, "message" => "All fields are required."]);
-        exit();
-    }
-
-    $stmt = $conn->prepare("SELECT id, username, password_hash FROM users WHERE username=? OR email=? LIMIT 1");
-    $stmt->bind_param("ss", $username, $username);
-    $stmt->execute();
-    $stmt->store_result();
-
-    if ($stmt->num_rows === 1) {
-        $stmt->bind_result($id, $uname, $hashed_password);
-        $stmt->fetch();
-
-        if (password_verify($password, $hashed_password)) {
-            $_SESSION['user_id'] = $id;
-            $_SESSION['username'] = $uname;
-
-            echo json_encode(["success" => true, "message" => "Login successful"]);
-        } else {
-            echo json_encode(["success" => false, "message" => "Invalid password"]);
-        }
-    } else {
-        echo json_encode(["success" => false, "message" => "No account found"]);
-    }
-
-    $stmt->close();
-    $conn->close();
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(["success" => false, "message" => "Method not allowed"]);
+    exit();
 }
+
+$username = trim($_POST['username'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$password = trim($_POST['password'] ?? '');
+$confirm_password = trim($_POST['confirm_password'] ?? '');
+
+if ($username === '' || $email === '' || $password === '' || $confirm_password === '') {
+    echo json_encode(["success" => false, "message" => "All fields are required."]);
+    exit();
+}
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo json_encode(["success" => false, "message" => "Invalid email address."]);
+    exit();
+}
+if ($password !== $confirm_password) {
+    echo json_encode(["success" => false, "message" => "Passwords do not match."]);
+    exit();
+}
+
+// Check duplicates
+$check = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ? LIMIT 1");
+$check->execute([$username, $email]);
+if ($check->fetch()) {
+    echo json_encode(["success" => false, "message" => "Username or Email already exists."]);
+    exit();
+}
+
+// Insert user
+$hashed = password_hash($password, PASSWORD_DEFAULT);
+$ins = $pdo->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
+$ins->execute([$username, $email, $hashed]);
+
+echo json_encode(["success" => true, "message" => "Account created successfully."]);

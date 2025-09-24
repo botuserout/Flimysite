@@ -3,68 +3,28 @@ session_start();
 require 'db.php';
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-
-    if (empty($email) || empty($password)) {
-        echo json_encode(["success" => false, "message" => "Email and password are required"]);
-        exit();
-    }
-
-    // Get user from database
-    $stmt = $pdo->prepare("SELECT id, email, password FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
-
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        echo json_encode(["success" => true]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Invalid email or password"]);
-    }
-} else {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(["success" => false, "message" => "Method not allowed"]);
+    exit();
 }
 
-    if ($password !== $confirm_password) {
-        echo json_encode(["success" => false, "message" => "Passwords do not match."]);
-        exit();
-    }
+$identifier = trim($_POST['username'] ?? $_POST['email'] ?? '');
+$password = trim($_POST['password'] ?? '');
 
-    $check = $conn->prepare("SELECT id FROM users WHERE username=? OR email=?");
-    $check->bind_param("ss", $username, $email);
-    $check->execute();
-    $check->store_result();
-
-    if ($check->num_rows > 0) {
-        echo json_encode(["success" => false, "message" => "Username or Email already exists."]);
-        exit();
-    }
-
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $email, $hashed_password);
-
-    if ($stmt->execute()) {
-        echo json_encode(["success" => true, "message" => "Account created successfully."]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Error creating account."]);
-    }
-
-    $stmt->close();
-    $conn->close();
+if ($identifier === '' || $password === '') {
+    echo json_encode(["success" => false, "message" => "Email/username and password are required"]);
+    exit();
 }
-const formData = {
-    username: document.getElementById('username').value,
-    password: document.getElementById('password').value
-};
 
-const response = await fetch('api/login.php', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData)
-});
+$stmt = $pdo->prepare("SELECT id, username, email, password_hash FROM users WHERE email = ? OR username = ? LIMIT 1");
+$stmt->execute([$identifier, $identifier]);
+$user = $stmt->fetch();
+
+if ($user && password_verify($password, $user['password_hash'])) {
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['username'] = $user['username'];
+    echo json_encode(["success" => true]);
+} else {
+    echo json_encode(["success" => false, "message" => "Invalid credentials"]);
+}

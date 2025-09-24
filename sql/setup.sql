@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS movie_app CHARACTER SET utf8mb4 COLLATE utf8mb4_un
 USE movie_app;
 
 -- users
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(120) NOT NULL UNIQUE,
@@ -13,7 +13,7 @@ CREATE TABLE users (
 );
 
 -- movies
-CREATE TABLE movies (
+CREATE TABLE IF NOT EXISTS movies (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     poster_url VARCHAR(1000),
@@ -24,7 +24,7 @@ CREATE TABLE movies (
 );
 
 -- ratings (one rating per user per movie)
-CREATE TABLE ratings (
+CREATE TABLE IF NOT EXISTS ratings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     movie_id INT NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE ratings (
 );
 
 -- watchlist
-CREATE TABLE watchlist (
+CREATE TABLE IF NOT EXISTS watchlist (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     movie_id INT NOT NULL,
@@ -56,19 +56,9 @@ CREATE TABLE feedback (
 );
 
 -- seed an admin and some movies
-INSERT INTO
-    users (
-        username,
-        email,
-        password_hash,
-        is_admin
-    )
-VALUES (
-        'admin',
-        'admin@example.com',
-        '$2y$10$replace_with_hash',
-        1
-    );
+INSERT INTO users (username, email, password_hash, is_admin)
+VALUES ('admin', 'admin@example.com', '$2y$10$replace_with_hash', 1)
+ON DUPLICATE KEY UPDATE email=VALUES(email);
 
 -- Note: replace password hash above. Better: create user via signup or generate hash with PHP.
 INSERT INTO
