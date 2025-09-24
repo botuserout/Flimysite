@@ -1,22 +1,32 @@
 <?php
+session_start();
 require 'db.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
-    $confirm_password = trim($_POST['confirm_password']);
 
-    if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
-        echo json_encode(["success" => false, "message" => "All fields are required."]);
+    if (empty($email) || empty($password)) {
+        echo json_encode(["success" => false, "message" => "Email and password are required"]);
         exit();
     }
 
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo json_encode(["success" => false, "message" => "Invalid email address."]);
-        exit();
+    // Get user from database
+    $stmt = $pdo->prepare("SELECT id, email, password FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        echo json_encode(["success" => true]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Invalid email or password"]);
     }
+} else {
+    http_response_code(405);
+    echo json_encode(["success" => false, "message" => "Method not allowed"]);
+}
 
     if ($password !== $confirm_password) {
         echo json_encode(["success" => false, "message" => "Passwords do not match."]);
