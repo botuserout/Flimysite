@@ -1,27 +1,39 @@
 <?php
 session_start();
-header('Content-Type: application/json');
 require 'db.php';
 
-$data = json_decode(file_get_contents('php://input'), true);
-$username = trim($data['username'] ?? '');
-$email = trim($data['email'] ?? '');
-$password = $data['password'] ?? '';
+header('Content-Type: application/json');
 
-if (!$username || !$email || !$password) {
-    http_response_code(400);
-    echo json_encode(['error'=>'Missing fields']);
-    exit;
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
-$hash = password_hash($password, PASSWORD_DEFAULT);
+    if (empty($username) || empty($password)) {
+        echo json_encode(["success" => false, "message" => "All fields are required."]);
+        exit();
+    }
 
-try {
-    $stmt = $pdo->prepare('INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)');
-    $stmt->execute([$username, $email, $hash]);
-    $_SESSION['user_id'] = $pdo->lastInsertId();
-    echo json_encode(['success' => true]);
-} catch (PDOException $e) {
-    http_response_code(400);
-    echo json_encode(['error' => 'User exists or invalid data']);
+    $stmt = $conn->prepare("SELECT id, username, password_hash FROM users WHERE username=? OR email=? LIMIT 1");
+    $stmt->bind_param("ss", $username, $username);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows === 1) {
+        $stmt->bind_result($id, $uname, $hashed_password);
+        $stmt->fetch();
+
+        if (password_verify($password, $hashed_password)) {
+            $_SESSION['user_id'] = $id;
+            $_SESSION['username'] = $uname;
+
+            echo json_encode(["success" => true, "message" => "Login successful"]);
+        } else {
+            echo json_encode(["success" => false, "message" => "Invalid password"]);
+        }
+    } else {
+        echo json_encode(["success" => false, "message" => "No account found"]);
+    }
+
+    $stmt->close();
+    $conn->close();
 }

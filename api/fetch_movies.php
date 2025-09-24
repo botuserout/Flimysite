@@ -4,7 +4,7 @@ require 'db.php';
 
 $q = $_GET['q'] ?? '';
 $genre = $_GET['genre'] ?? '';
-$limit = intval($_GET['limit'] ?? 50);
+$limit = (int)($_GET['limit'] ?? 50);  // Cast to integer
 
 $sql = "SELECT m.*, 
  (SELECT IFNULL(ROUND(AVG(rating),1),0) FROM ratings WHERE movie_id = m.id) AS avg_rating,
@@ -20,8 +20,7 @@ if ($genre !== '' && $genre !== 'All') {
     $sql .= " AND m.genre = ?";
     $params[] = $genre;
 }
-$sql .= " ORDER BY m.title LIMIT ?";
-$params[] = $limit;
+$sql .= " ORDER BY m.title LIMIT " . $limit; // Changed to directly append the integer limit
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
