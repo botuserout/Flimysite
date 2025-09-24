@@ -56,3 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
     $conn->close();
 }
+const formData = {
+    username: document.getElementById('username').value,
+    password: document.getElementById('password').value
+};
+
+const response = await fetch('api/login.php', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+});
