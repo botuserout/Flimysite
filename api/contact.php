@@ -8,5 +8,5 @@ $msg = trim($data['message'] ?? '');
 if (!$email || !$msg) { http_response_code(400); echo json_encode(['error'=>'missing']); exit; }
 $stmt = $pdo->prepare('INSERT INTO feedback (name,email,message) VALUES (?, ?, ?)');
 $stmt->execute([$name,$email,$msg]);
-// Optionally: mail('you@domain.com', "New feedback", $msg, "From: $email");
+mail('you@domain.com', "New feedback", $msg, "From: $email");
 echo json_encode(['success'=>true]);
