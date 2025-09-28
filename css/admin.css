@@ -1,0 +1,159 @@
+
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://source.unsplash.com/1920x1080/?cinema,movies') no-repeat center center/cover;
+      backdrop-filter: blur(10px);
+      margin: 0; padding: 0;
+      color: #000000;
+    }
+    .glass-container {
+      background: rgba(41, 62, 181, 0.594);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 40px auto;
+      width: 90%;
+      max-width: 1100px;
+      box-shadow: 0 4px 30px rgba(58, 239, 17, 0.482);
+    }
+    
+    /* Admin Header */
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .admin-header h1 {
+      margin: 0;
+      color: #fff;
+    }
+    
+    .home-btn {
+      background: linear-gradient(135deg, #4a9eff, #0066cc);
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .home-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
+      color: white;
+      text-decoration: none;
+    }
+    nav {
+      display: flex;
+      justify-content: space-around;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    nav a {
+      color: #000000;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    nav a:hover { color: #ffcc00; }
+    table {
+      width: 100%; border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    th { text-align: left; }
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 5px;
+      transition: 0.3s;
+    }
+    .edit-btn { background: #3498db; color: #fff; }
+    .delete-btn { background: #e74c3c; color: #fff; }
+    .add-btn { background: #27ae60; color: #fff; }
+    .btn:hover { opacity: 0.8; }
+    
+    /* Movie Actions */
+    .movie-actions {
+      margin-bottom: 20px;
+      text-align: right;
+    }
+    
+    /* Success Messages */
+    .success-message {
+      background: rgba(39, 174, 96, 0.8);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+    /* Modal Styling */
+    .modal {
+      display: none; position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center; align-items: center;
+    }
+    .modal-content {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 20px;
+      width: 400px;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .modal input, .modal textarea {
+      width: 100%; margin-bottom: 10px;
+      padding: 8px; border-radius: 8px;
+      border: none; outline: none;
+    }
+    .close-btn {
+      background: #e74c3c;
+      color: #fff;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      float: right;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .admin-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .home-btn {
+        align-self: center;
+      }
+      
+      .glass-container {
+        margin: 20px auto;
+        padding: 15px;
+        width: 95%;
+      }
+      
+      .modal-content {
+        width: 90%;
+        margin: 20px;
+      }
+    }
+  

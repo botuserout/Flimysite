@@ -1,11 +1,27 @@
 <?php
 session_start();
-require_once "db.php";
+require_once "api/db.php";
+
+// Add Movie
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_movie'])) {
+    $title = $_POST['title'];
+    $year = $_POST['year'];
+    $genre = $_POST['genre'];
+    $description = $_POST['description'];
+    $poster_url = $_POST['poster_url'];
+
+    $stmt = $pdo->prepare("INSERT INTO movies (title, release_year, genre, description, poster_url) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([$title, $year, $genre, $description, $poster_url]);
+
+    header("Location: admin.php?tab=movies&added=1");
+    exit;
+}
 
 // Delete Movie
 if (isset($_GET['delete_movie'])) {
     $movie_id = intval($_GET['delete_movie']);
-    $conn->query("DELETE FROM movies WHERE id=$movie_id");
+    $stmt = $pdo->prepare("DELETE FROM movies WHERE id = ?");
+    $stmt->execute([$movie_id]);
     header("Location: admin.php?tab=movies");
     exit;
 }
@@ -20,17 +36,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_movie'])) {
     $poster_url = $_POST['poster_url'];
     $rating = $_POST['rating'];
 
-    $stmt = $conn->prepare("UPDATE movies SET title=?, year=?, genre=?, description=?, poster_url=?, rating=? WHERE id=?");
-    $stmt->bind_param("sisssdi", $title, $year, $genre, $description, $poster_url, $rating, $id);
-    $stmt->execute();
+    $stmt = $pdo->prepare("UPDATE movies SET title=?, release_year=?, genre=?, description=?, poster_url=? WHERE id=?");
+    $stmt->execute([$title, $year, $genre, $description, $poster_url, $id]);
 
     header("Location: admin.php?tab=movies&updated=1");
     exit;
 }
 
 // Fetch data
-$users = $conn->query("SELECT * FROM users");
-$movies = $conn->query("SELECT * FROM movies");
+$users_stmt = $pdo->query("SELECT * FROM users");
+$users = $users_stmt->fetchAll();
+
+$movies_stmt = $pdo->query("SELECT * FROM movies");
+$movies = $movies_stmt->fetchAll();
 
 $currentTab = $_GET['tab'] ?? 'users';
 ?>
@@ -39,94 +57,14 @@ $currentTab = $_GET['tab'] ?? 'users';
 <head>
   <meta charset="UTF-8">
   <title>Admin Panel</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: url('https://source.unsplash.com/1920x1080/?cinema,movies') no-repeat center center/cover;
-      backdrop-filter: blur(10px);
-      margin: 0; padding: 0;
-      color: #fff;
-    }
-    .glass-container {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 20px;
-      margin: 40px auto;
-      width: 90%;
-      max-width: 1100px;
-      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
-    }
-    nav {
-      display: flex;
-      justify-content: space-around;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(6px);
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-    nav a:hover { color: #ffcc00; }
-    table {
-      width: 100%; border-collapse: collapse;
-    }
-    th, td {
-      padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);
-    }
-    th { text-align: left; }
-    .btn {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-right: 5px;
-      transition: 0.3s;
-    }
-    .edit-btn { background: #3498db; color: #fff; }
-    .delete-btn { background: #e74c3c; color: #fff; }
-    .btn:hover { opacity: 0.8; }
-    /* Modal Styling */
-    .modal {
-      display: none; position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      justify-content: center; align-items: center;
-    }
-    .modal-content {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 20px;
-      width: 400px;
-      color: #fff;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    .modal input, .modal textarea {
-      width: 100%; margin-bottom: 10px;
-      padding: 8px; border-radius: 8px;
-      border: none; outline: none;
-    }
-    .close-btn {
-      background: #e74c3c;
-      color: #fff;
-      padding: 6px 12px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      float: right;
-    }
-  </style>
+  <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
   <div class="glass-container">
-    <h1>Admin Panel</h1>
+    <div class="admin-header">
+      <h1>Admin Panel</h1>
+      <a href="index.php" class="home-btn">🏠 Return to Home</a>
+    </div>
     <nav>
       <a href="?tab=users">👤 User Inspection</a>
       <a href="?tab=movies">🎬 Movie Management</a>
@@ -136,38 +74,67 @@ $currentTab = $_GET['tab'] ?? 'users';
       <h2>Registered Users</h2>
       <table>
         <tr><th>ID</th><th>Name</th><th>Email</th></tr>
-        <?php while($u = $users->fetch_assoc()): ?>
+        <?php foreach($users as $u): ?>
           <tr>
             <td><?= $u['id'] ?></td>
-            <td><?= $u['name'] ?></td>
+            <td><?= $u['username'] ?></td>
             <td><?= $u['email'] ?></td>
           </tr>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
       </table>
     <?php elseif ($currentTab == 'movies'): ?>
-      <h2>Movie List</h2>
+      <h2>Movie Management</h2>
+      
+      <?php if (isset($_GET['added'])): ?>
+        <div class="success-message">Movie added successfully!</div>
+      <?php endif; ?>
+      
+      <?php if (isset($_GET['updated'])): ?>
+        <div class="success-message">Movie updated successfully!</div>
+      <?php endif; ?>
+      
+      <div class="movie-actions">
+        <button class="btn add-btn" onclick="openAddModal()">+ Add New Movie</button>
+      </div>
+      
       <table>
         <tr><th>ID</th><th>Title</th><th>Year</th><th>Genre</th><th>Actions</th></tr>
-        <?php while($m = $movies->fetch_assoc()): ?>
+        <?php foreach($movies as $m): ?>
           <tr>
             <td><?= $m['id'] ?></td>
             <td><?= $m['title'] ?></td>
-            <td><?= $m['year'] ?></td>
+            <td><?= $m['release_year'] ?></td>
             <td><?= $m['genre'] ?></td>
             <td>
               <button class="btn edit-btn" onclick="openModal(<?= htmlspecialchars(json_encode($m)) ?>)">Edit</button>
               <a href="?delete_movie=<?= $m['id'] ?>" class="btn delete-btn" onclick="return confirm('Delete this movie?')">Delete</a>
             </td>
           </tr>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
       </table>
     <?php endif; ?>
+  </div>
+
+  <!-- Modal for Adding New Movie -->
+  <div class="modal" id="addModal">
+    <div class="modal-content">
+      <button id="closeAddModal" class="close-btn" onclick="closeAddModal()">×</button>
+      <h3>Add New Movie</h3>
+      <form method="POST">
+        <input type="text" name="title" placeholder="Movie Title" required>
+        <input type="number" name="year" placeholder="Release Year" required>
+        <input type="text" name="genre" placeholder="Genre" required>
+        <textarea name="description" placeholder="Description" rows="4" required></textarea>
+        <input type="url" name="poster_url" placeholder="Poster URL" required>
+        <button type="submit" name="add_movie" class="btn add-btn">Add Movie</button>
+      </form>
+    </div>
   </div>
 
   <!-- Modal for Editing -->
   <div class="modal" id="editModal">
     <div class="modal-content">
-      <button class="close-btn" onclick="closeModal()">X</button>
+      <button id="closeModal" class="close-btn" onclick="closeModal()">X</button>
       <h3>Edit Movie</h3>
       <form method="POST">
         <input type="hidden" name="id" id="movieId">
@@ -176,25 +143,45 @@ $currentTab = $_GET['tab'] ?? 'users';
         <input type="text" name="genre" id="movieGenre" placeholder="Genre" required>
         <textarea name="description" id="movieDesc" placeholder="Description" rows="4" required></textarea>
         <input type="text" name="poster_url" id="moviePoster" placeholder="Poster URL" required>
-        <input type="number" step="0.1" name="rating" id="movieRating" placeholder="Rating" required>
         <button type="submit" name="update_movie" class="btn edit-btn">Update</button>
       </form>
     </div>
   </div>
 
   <script>
+    function openAddModal() {
+      document.getElementById('addModal').style.display = 'flex';
+    }
+    
+    function closeAddModal() {
+      document.getElementById('addModal').style.display = 'none';
+    }
+    
     function openModal(movie) {
       document.getElementById('editModal').style.display = 'flex';
       document.getElementById('movieId').value = movie.id;
       document.getElementById('movieTitle').value = movie.title;
-      document.getElementById('movieYear').value = movie.year;
+      document.getElementById('movieYear').value = movie.release_year;
       document.getElementById('movieGenre').value = movie.genre;
       document.getElementById('movieDesc').value = movie.description;
       document.getElementById('moviePoster').value = movie.poster_url;
-      document.getElementById('movieRating').value = movie.rating;
     }
+    
     function closeModal() {
       document.getElementById('editModal').style.display = 'none';
+    }
+    
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+      const addModal = document.getElementById('addModal');
+      const editModal = document.getElementById('editModal');
+      
+      if (event.target === addModal) {
+        addModal.style.display = 'none';
+      }
+      if (event.target === editModal) {
+        editModal.style.display = 'none';
+      }
     }
   </script>
 </body>

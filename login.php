@@ -40,7 +40,7 @@ if (isset($_SESSION['user_id'])) {
       </div>
 
       <div class="login-right">
-        <img src="assests/placeholder.jpg" alt="Movie Haven" class="login-image">
+        <img src="https://www.movieposters.com/cdn/shop/files/the-conjuring-last-rites_grq2ij7h_a56c49c5-2ac7-4ccb-94c1-fbfff9035ce7.jpg?v=1756308720&width=350" alt=WelCome to MovieHeaven RollUp">
       </div>
     </div>
   </div>

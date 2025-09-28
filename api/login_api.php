@@ -17,13 +17,14 @@ if ($identifier === '' || $password === '') {
     exit();
 }
 
-$stmt = $pdo->prepare("SELECT id, username, email, password_hash FROM users WHERE email = ? OR username = ? LIMIT 1");
+$stmt = $pdo->prepare("SELECT id, username, email, password_hash, is_admin FROM users WHERE email = ? OR username = ? LIMIT 1");
 $stmt->execute([$identifier, $identifier]);
 $user = $stmt->fetch();
 
 if ($user && password_verify($password, $user['password_hash'])) {
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
+    $_SESSION['is_admin'] = $user['is_admin']; // Add admin status to session
     echo json_encode(["success" => true]);
 } else {
     echo json_encode(["success" => false, "message" => "Invalid credentials"]);

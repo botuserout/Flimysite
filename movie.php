@@ -5,12 +5,16 @@ require_once "api/db.php";
 // Get movie ID from query parameter
 $movie_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Fetch movie details
-$stmt = $conn->prepare("SELECT * FROM movies WHERE id = ?");
-$stmt->bind_param("i", $movie_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$movie = $result->fetch_assoc();
+// Fetch movie details with rating
+$stmt = $pdo->prepare("
+    SELECT m.*, 
+           (SELECT IFNULL(ROUND(AVG(rating),1),0) FROM ratings WHERE movie_id = m.id) AS avg_rating,
+           (SELECT COUNT(*) FROM ratings WHERE movie_id = m.id) AS rating_count
+    FROM movies m 
+    WHERE m.id = ?
+");
+$stmt->execute([$movie_id]);
+$movie = $stmt->fetch();
 
 if (!$movie) {
     echo "<h2>Movie not found!</h2>";
@@ -22,27 +26,16 @@ if (!$movie) {
 <head>
     <meta charset="UTF-8">
     <title><?php echo htmlspecialchars($movie['title']); ?> - MovieHaven</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 
     <!-- Navbar -->
     <header class="navbar">
-        <div class="logo">Flimysite</div>
+        <div class="logo">FlimyhHeaven🎥</div>
         <nav>
-            <a href="index.php">Home</a>
-            <a href="index.php#genres">Genres</a>
-            <a href="contact.php">Contact</a>
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="watchlist.php">My Watchlist</a>
-                <a href="logout.php">Logout</a>
-            <?php else: ?>
-                <a href="login.php">Login/Signup</a>
-            <?php endif; ?>
+            <a href="index.php">Home</a
         </nav>
-        <form method="get" action="index.php" class="search-bar">
-            <input type="text" name="search" placeholder="Search movies...">
-        </form>
     </header>
 
     <!-- Movie Detail Section -->
@@ -52,45 +45,42 @@ if (!$movie) {
         </div>
         <div class="info">
             <h1><?php echo htmlspecialchars($movie['title']); ?></h1>
-            <p><span class="year"><?php echo $movie['year']; ?></span> • <?php echo htmlspecialchars($movie['genre']); ?></p>
+            <p><span class="year"><?php echo $movie['release_year']; ?></span> • <?php echo htmlspecialchars($movie['genre']); ?></p>
             <p class="description"><?php echo nl2br(htmlspecialchars($movie['description'])); ?></p>
 
-            <div class="rating">
-                <strong>Rating:</strong>
-                <span class="stars">⭐ <?php echo number_format($movie['rating'], 1); ?>/10</span>
+            <div class="current-rating">
+                <strong>Current Rating:</strong> <?php echo number_format($movie['avg_rating'], 1); ?>/5 
+                <span class="rating-count">(<?php echo $movie['rating_count']; ?> ratings)</span>
             </div>
 
             <?php if (isset($_SESSION['user_id'])): ?>
-                <form method="post" action="api/add_watchlist.php">
-                    <input type="hidden" name="movie_id" value="<?php echo $movie['id']; ?>">
-                    <button type="submit" class="btn">+ Add to Watchlist</button>
-                </form>
-                <form method="post" action="api/rate_movie.php" class="rate-form">
-                    <input type="hidden" name="movie_id" value="<?php echo $movie['id']; ?>">
-                    <label for="rating">Rate this movie:</label>
-                    <select name="rating" required>
-                        <option value="">--Select--</option>
-                        <?php for ($i=1; $i<=10; $i++): ?>
-                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                        <?php endfor; ?>
-                    </select>
-                    <button type="submit" class="btn">Submit</button>
-                </form>
+                <div class="rating-section">
+                    <h3>Rate this movie:</h3>
+                    <div class="star-rating">
+                        <button class="star-btn" onclick="rateMovie(<?= $movie['id'] ?>, 1)">⭐</button>
+                        <button class="star-btn" onclick="rateMovie(<?= $movie['id'] ?>, 2)">⭐</button>
+                        <button class="star-btn" onclick="rateMovie(<?= $movie['id'] ?>, 3)">⭐</button>
+                        <button class="star-btn" onclick="rateMovie(<?= $movie['id'] ?>, 4)">⭐</button>
+                        <button class="star-btn" onclick="rateMovie(<?= $movie['id'] ?>, 5)">⭐</button>
+                    </div>
+                    <p class="rating-help">Click a star to rate (1-5 stars)</p>
+                </div>
             <?php else: ?>
-                <p><a href="login.php">Login</a> to add to watchlist or rate this movie.</p>
+                <div class="rating-section">
+                    <p><a href="login.php">Login to rate this movie</a></p>
+                </div>
             <?php endif; ?>
         </div>
     </main>
 
     <footer>
-        <p>© <?php echo date("Y"); ?> CineSphere. All rights reserved.</p>
-        <div class="socials">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-linkedin"></i></a>
-        </div>
-    </footer>
+        <p>© <?php echo date("Y"); ?> FlimyHeaven.RAKESH & RAHIL.</p>
+    </footer>s
 
+    <script>
+        window.USER_ID = <?= isset($_SESSION['user_id']) ? json_encode($_SESSION['user_id']) : 'null' ?>;
+        console.log('Movie page USER_ID set to:', window.USER_ID);
+    </script>
+    <script src="js/main.js"></script>
 </body>
 </html>
