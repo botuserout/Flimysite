@@ -40,12 +40,12 @@ error_log("Total movies found: " . count($movies));
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MovieHaven - Discover Your Next Favorite Movie</title>
+  <title>MovieHeaven - Discover Your Next Favorite Movie</title>
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
   <header class="topbar">
-    <h1 class="brand">🎬 MovieHaven</h1>
+    <h1 class="brand">🎬 MovieHeaven</h1>
     <nav class="nav-links">
       <a href="index.php" class="nav-link">Home</a>
              <?php if(isset($_SESSION['user_id']) && isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>

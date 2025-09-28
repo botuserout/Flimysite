@@ -45,7 +45,7 @@ if (isset($_SESSION['user_id'])) {
 
       <!-- Right section (Image) -->
       <div class="signup-right">
-        <img src="assests/placeholder.jpg" alt="Signup Banner" class="signup-image">
+        <img src="https://upload.wikimedia.org/wikipedia/en/6/6d/The_Terminator.png" alt="Signup Banner" class="signup-image">
       </div>
     </div>
   </div>
