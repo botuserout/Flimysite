@@ -1,14 +1,11 @@
 /* Signup Page */
 .signup-body {
-    background-color: #000;
-    color: #e0e0e0;
-    font-family: 'Segoe UI', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  background: linear-gradient(135deg, #212A31 0%, #2E3944 25%, #124E66 50%, #748D92 75%, #D3D9D4 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
-
 .signup-container {
     display: flex;
     justify-content: center;

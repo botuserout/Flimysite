@@ -1,7 +1,7 @@
 <?php
 // api/db.php — single unified PDO connection to movie_app
 $host = '127.0.0.1';
-$db   = 'movie_app';
+$db   = 'flimy_app';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';

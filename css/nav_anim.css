@@ -1,0 +1,34 @@
+/* Animated login/signup buttons for nav bar */
+.nav-link.btn-anim {
+  position: relative;
+  overflow: hidden;
+  color: #fff !important;
+  background: linear-gradient(90deg, #124E66 60%, #0a3475 100%);
+  border-radius: 7px;
+  padding: 0.5em 1.3em;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #124e6612;
+  transition: background 0.22s, color 0.22s, transform 0.18s;
+  z-index: 1;
+}
+.nav-link.btn-anim::before {
+  content: '';
+  position: absolute;
+  left: -70%;
+  top: 0;
+  width: 70%;
+  height: 100%;
+  background: linear-gradient(90deg, #42aaff60 0%, #124E66 100%);
+  transition: left 0.35s cubic-bezier(.4,1.4,.5,1), opacity 0.2s;
+  z-index: -1;
+  opacity: 0.7;
+}
+.nav-link.btn-anim:hover {
+  background: linear-gradient(90deg, #0a3475 60%, #124E66 100%);
+  color: #fff !important;
+  transform: translateY(-2px) scale(1.03);
+}
+.nav-link.btn-anim:hover::before {
+  left: 100%;
+  opacity: 0;
+}

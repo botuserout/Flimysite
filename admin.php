@@ -62,16 +62,14 @@ $currentTab = $_GET['tab'] ?? 'users';
 <body>
   <div class="glass-container">
     <div class="admin-header">
-      <h1>Admin Panel</h1>
       <a href="index.php" class="home-btn">🏠 Return to Home</a>
     </div>
     <nav>
-      <a href="?tab=users">👤 User Inspection</a>
-      <a href="?tab=movies">🎬 Movie Management</a>
+      <a href="?tab=users" style="background: linear-gradient(90deg, #124E66 0%, #42aaff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; font-weight: bold;">👤 User Inspection</a>
+      <a href="?tab=movies" style="background: linear-gradient(90deg, #124E66 0%, #42aaff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; font-weight: bold;">🎬 Movie Management</a>
     </nav>
-
     <?php if ($currentTab == 'users'): ?>
-      <h2>Registered Users</h2>
+      <h2 style="background: linear-gradient(90deg, #124E66 0%, #42aaff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; font-weight: bold;">Registered Users</h2>
       <table>
         <tr><th>ID</th><th>Name</th><th>Email</th></tr>
         <?php foreach($users as $u): ?>
@@ -83,7 +81,7 @@ $currentTab = $_GET['tab'] ?? 'users';
         <?php endforeach; ?>
       </table>
     <?php elseif ($currentTab == 'movies'): ?>
-      <h2>Movie Management</h2>
+      <h2 style="background: linear-gradient(90deg, #124E66 0%, #42aaff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; font-weight: bold;">Movie Management</h2>
       
       <?php if (isset($_GET['added'])): ?>
         <div class="success-message">Movie added successfully!</div>

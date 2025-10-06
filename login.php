@@ -11,7 +11,7 @@ if (isset($_SESSION['user_id'])) {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login - MovieHaven</title>
+  <title>Login - FlimyHeaven</title>
   <link rel="stylesheet" href="css/lstyle.css">
 </head>
 <body class="login-body">
@@ -19,7 +19,7 @@ if (isset($_SESSION['user_id'])) {
   <div class="login-container">
     <div class="login-box">
       <div class="login-left">
-        <h1>Welcome Back to <span class="brand">MovieHaven</span></h1>
+        <h1>Welcome Back to <span class="brand">FlilyHeaven</span></h1>
         <p class="subtitle">Discover your next favorite film.</p>
 
         <form id="loginForm">
@@ -29,7 +29,7 @@ if (isset($_SESSION['user_id'])) {
           <label for="password">Password</label>
           <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
-          <a href="forgot.php" class="forgot-link">Forgot Password?</a>
+          <a href="forgot_password.php" class="forgot-link">Forgot Password?</a>
 
           <button type="submit" class="btn-login">Login</button>
         </form>

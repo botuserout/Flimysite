@@ -1,6 +1,4 @@
-CREATE DATABASE IF NOT EXISTS movie_app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-USE movie_app;
+USE if0_40045927_movie_app;
 
 -- users
 CREATE TABLE IF NOT EXISTS users (
@@ -39,11 +37,13 @@ CREATE TABLE IF NOT EXISTS ratings (
     FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
--- watchlist
-CREATE TABLE IF NOT EXISTS watchlist (
+-- user_movies (combines watchlist + rating)
+CREATE TABLE IF NOT EXISTS user_movies (
     id INT(11) NOT NULL AUTO_INCREMENT,
     user_id INT(11) NOT NULL,
     movie_id INT(11) NOT NULL,
+    in_watchlist TINYINT(1) DEFAULT 0,
+    rating TINYINT(4) DEFAULT NULL,
     added_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY (user_id, movie_id),
     KEY movie_id (movie_id),
@@ -52,15 +52,33 @@ CREATE TABLE IF NOT EXISTS watchlist (
     FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
--- feedback
-CREATE TABLE IF NOT EXISTS feedback (
-    id INT(11) NOT NULL AUTO_INCREMENT,
-    name VARCHAR(120) DEFAULT NULL,
-    email VARCHAR(120) DEFAULT NULL,
-    message TEXT DEFAULT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+-- Create watched_movies table for tracking watched status per user and movie
+CREATE TABLE IF NOT EXISTS watched_movies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,
+    watched_status TINYINT(1) NOT NULL DEFAULT 0,
+    UNIQUE KEY user_movie_unique (user_id, movie_id)
+);
+-- User reviews table
+CREATE TABLE IF NOT EXISTS reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,
+    review TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX(movie_id),
+    INDEX(user_id)
+);
+-- Table for storing password reset tokens
+CREATE TABLE IF NOT EXISTS password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    INDEX(user_id),
+    INDEX(token)
+);
 
 -- Seed users
 INSERT INTO
@@ -336,5 +354,3 @@ VALUES (
     )
 ON DUPLICATE KEY UPDATE
     title = VALUES(title);
-
--- You can add more seed data for ratings, watchlist, and feedback if needed.

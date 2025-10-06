@@ -11,7 +11,7 @@ if (isset($_SESSION['user_id'])) {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sign Up - MovieHaven</title>
+  <title>Sign Up - FlimyHeaven</title>
   <link rel="stylesheet" href="css/sstyle.css">
 </head>
 <body class="signup-body">

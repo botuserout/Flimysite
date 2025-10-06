@@ -1,0 +1,46 @@
+<div id="chatbot-container" style="position:fixed;bottom:32px;right:32px;z-index:9999;">
+  <div id="chatbot-window" style="display:none;background:#fff;border-radius:10px;box-shadow:0 2px 12px #124E66cc;width:330px;max-width:95vw;">
+    <div style="background:#124E66;color:#fff;padding:12px 16px;border-radius:10px 10px 0 0;font-weight:bold;">🎬 MovieBot</div>
+    <div id="chatbot-messages" style="padding:12px;height:260px;overflow-y:auto;font-size:1em;"></div>
+    <form id="chatbot-form" style="display:flex;border-top:1px solid #eee;">
+      <input id="chatbot-input" type="text" placeholder="Ask for recommendations..." style="flex:1;padding:8px;border:none;border-radius:0 0 0 10px;outline:none;">
+      <button type="submit" style="background:#124E66;color:#fff;border:none;padding:0 20px;border-radius:0 0 10px 0;">Send</button>
+    </form>
+  </div>
+  <button id="chatbot-toggle" style="background:#124E66;color:#fff;border:none;border-radius:50%;width:56px;height:56px;font-size:2rem;box-shadow:0 2px 8px #124E66aa;">💬</button>
+</div>
+<script>
+(function(){
+  const toggle = document.getElementById('chatbot-toggle');
+  const windowEl = document.getElementById('chatbot-window');
+  const form = document.getElementById('chatbot-form');
+  const input = document.getElementById('chatbot-input');
+  const messages = document.getElementById('chatbot-messages');
+  toggle.onclick = ()=>{windowEl.style.display = windowEl.style.display==='block'?'none':'block';};
+  form.onsubmit = async function(e) {
+    e.preventDefault();
+    const msg = input.value.trim();
+    if (!msg) return;
+    messages.innerHTML += `<div style='margin:6px 0;text-align:right;'><span style='background:#124E66;color:#fff;padding:6px 10px;border-radius:12px 12px 2px 12px;display:inline-block;'>${msg}</span></div>`;
+    input.value = '';
+    messages.scrollTop = messages.scrollHeight;
+    messages.innerHTML += `<div style='margin:6px 0;text-align:left;'><span style='background:#eee;color:#124E66;padding:6px 10px;border-radius:12px 2px 12px 12px;display:inline-block;'>Thinking...</span></div>`;
+    messages.scrollTop = messages.scrollHeight;
+    const resp = await fetch('api/chatbot.php', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({message: msg})
+    });
+    const data = await resp.json();
+    messages.lastChild.innerHTML = `<span style='background:#eee;color:#124E66;padding:6px 10px;border-radius:12px 2px 12px 12px;display:inline-block;'>${data.reply?data.reply:'Sorry, error.'}</span>`;
+    messages.scrollTop = messages.scrollHeight;
+    // Show clickable movie cards if available
+    if (data.movies && Array.isArray(data.movies)) {
+      data.movies.forEach(m=>{
+        messages.innerHTML += `<div style='margin:8px 0;text-align:left;'><div style='display:flex;align-items:center;gap:10px;background:#f7fafd;border-radius:8px;padding:7px 10px;'><img src='${m.poster_url||'https://via.placeholder.com/50x70'}' style='width:38px;height:54px;object-fit:cover;border-radius:5px;'><div><div style='font-weight:bold;'>${m.title} (${m.release_year||''})</div><div style='font-size:0.97em;color:#124E66;'>⭐${Number(m.avg_rating).toFixed(1)}</div><a href='movie.php?id=${m.id}' target='_blank' style='color:#fff;background:#124E66;border-radius:4px;padding:2px 10px;font-size:0.93em;display:inline-block;margin-top:4px;text-decoration:none;'>View Details</a></div></div></div>`;
+      });
+      messages.scrollTop = messages.scrollHeight;
+    }
+  };
+})();
+</script>
