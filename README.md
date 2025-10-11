@@ -2,7 +2,6 @@
 
 <div align="center">
 
-![Filmyheaven Banner](https://via.placeholder.com/1200x300/124E66/FFFFFF?text=Filmyheaven+-+Discover+Your+Next+Favorite+Movie)
 
 **A Dynamic Movie Platform with AI-Powered Recommendations**
 
