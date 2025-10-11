@@ -241,13 +241,13 @@ This project was created with dedication and passion by:
       <img src="https://via.placeholder.com/150/124E66/FFFFFF?text=R" width="100px;" style="border-radius:50%"/><br />
       <sub><b>Rakesh</b></sub><br />
       <sub>IU2341230372</sub><br />
-      
+      <sub></sub>
     </td>
     <td align="center">
       <img src="https://via.placeholder.com/150/124E66/FFFFFF?text=RP" width="100px;" style="border-radius:50%"/><br />
       <sub><b>Rahil Patel</b></sub><br />
       <sub>IU2341230375</sub><br />
-    
+      <sub></sub>
     </td>
   </tr>
 </table>
@@ -257,8 +257,7 @@ This project was created with dedication and passion by:
 ## 🔗 Links
 
 - **GitHub Repository**: [https://github.com/botuserout/Filmyheaven](https://github.com/botuserout/Filmyheaven)
-- **Live Demo**: *Coming Soon*
-- **Documentation**: *Coming Soon*
+- **Live **: *[Ready To explore](https://filmyheaven.gamer.gd/)*
 
 ---
 
