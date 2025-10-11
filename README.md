@@ -241,13 +241,13 @@ This project was created with dedication and passion by:
       <img src="https://via.placeholder.com/150/124E66/FFFFFF?text=R" width="100px;" style="border-radius:50%"/><br />
       <sub><b>Rakesh</b></sub><br />
       <sub>IU2341230372</sub><br />
-      <sub>Full Stack Developer</sub>
+      
     </td>
     <td align="center">
       <img src="https://via.placeholder.com/150/124E66/FFFFFF?text=RP" width="100px;" style="border-radius:50%"/><br />
       <sub><b>Rahil Patel</b></sub><br />
       <sub>IU2341230375</sub><br />
-      <sub>Full Stack Developer</sub>
+    
     </td>
   </tr>
 </table>
