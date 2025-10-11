@@ -223,8 +223,6 @@ filmyheaven/
 
 ## 📸 Screenshots
 
-> 🚧 **Coming Soon!** Screenshots of the platform will be added here.
-
 | Homepage | MovieMoodBot | Movie Details |
 |----------|--------------|---------------|
 | ![Home](placeholder) | ![Chatbot](placeholder) | ![Details](placeholder) |
