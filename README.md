@@ -1,15 +1,14 @@
-================================================================================
-                         FILMYHEAVEN
-          Your Ultimate Movie Discovery Platform
-================================================================================
-
+===============================================
+              FILMYHEAVEN
+  Your Ultimate Movie Discovery Platform
+===============================================
 A Dynamic Movie Platform with AI-Powered Recommendations
 
 GitHub Repository: https://github.com/botuserout/Filmyheaven
 
-================================================================================
-                        ABOUT THE PROJECT
-================================================================================
+===================================================
+          ABOUT THE PROJECT
+=================================================
 
 Filmyheaven is a feature-rich, dynamic movie discovery platform designed to 
 help users explore, manage, and enjoy their favorite films. With an intelligent 
@@ -20,10 +19,9 @@ Whether you're looking for a movie based on your current mood, want to maintain
 a watchlist, or explore top-rated films, Filmyheaven has got you covered.
 
 
-================================================================================
-                            FEATURES
-================================================================================
-
+=======================================
+             FEATURES
+=======================================
 CORE FEATURES
 -------------
 - Movie Discovery: Browse through an extensive collection of movies with 
@@ -66,10 +64,9 @@ MOVIEMOODBOT CAPABILITIES
 - Natural language understanding
 
 
-================================================================================
-                           TECH STACK
-================================================================================
-
+=========================================
+          TECH STACK
+=========================================
 Technology          Purpose
 ----------          -------
 PHP                 Server-side scripting and business logic
@@ -80,9 +77,9 @@ XAMPP               Local development environment
 JSON                Data exchange format for API
 
 
-================================================================================
-                          INSTALLATION
-================================================================================
+=======================================
+           INSTALLATION
+========================================
 
 Follow these steps to set up Filmyheaven on your local machine:
 
@@ -148,9 +145,9 @@ STEP-BY-STEP SETUP
    - You should see the Filmyheaven homepage!
 
 
-================================================================================
-                             USAGE
-================================================================================
+======================================
+             USAGE
+=======================================
 
 FOR USERS
 ---------
@@ -203,10 +200,9 @@ FOR ADMINISTRATORS
    - Monitor user activity
 
 
-================================================================================
-                        PROJECT STRUCTURE
-================================================================================
-
+============================================
+            PROJECT STRUCTURE
+============================================
 filmyheaven/
 │
 ├── api/                    # Backend API files
@@ -253,19 +249,18 @@ This project was created with dedication and passion by:
     Full Stack Developer            Full Stack Developer
 
 
-================================================================================
-                             LINKS
-================================================================================
+======================================
+               LINKS
+======================================
 
 - GitHub Repository: https://github.com/botuserout/Filmyheaven
-- Live Demo: Coming Soon
-- Documentation: Coming Soon
+- Live: https://filmyheaven.gamer.gd/
+- Documentation: 
 
 
-================================================================================
-                          CONTRIBUTING
-================================================================================
-
+=========================================
+           CONTRIBUTING
+=========================================
 Contributions, issues, and feature requests are welcome! 
 Feel free to check the issues page: 
 https://github.com/botuserout/Filmyheaven/issues
@@ -277,25 +272,25 @@ https://github.com/botuserout/Filmyheaven/issues
 5. Open a Pull Request
 
 
-================================================================================
-                            LICENSE
-================================================================================
+=========================================
+               LICENSE
+=========================================
 
 This project is open source and available for educational purposes.
 
 
-================================================================================
-                        ACKNOWLEDGMENTS
-================================================================================
+=========================================
+          ACKNOWLEDGMENTS
+=========================================
 
 - Movie data and information sourced from public APIs
 - Icons and design inspiration from modern web design trends
 - Special thanks to the open-source community
 
 
-================================================================================
-                      CONTACT & SUPPORT
-================================================================================
+==========================================
+         CONTACT & SUPPORT
+==========================================
 
 For questions, suggestions, or support:
 
@@ -305,7 +300,7 @@ For questions, suggestions, or support:
 
 ================================================================================
 
-                Made with love by Rakesh & Rahil Patel
+                Made with Passion by Rakesh & Rahil Patel
 
                 GitHub: https://github.com/botuserout/Filmyheaven
 
